@@ -1,9 +1,32 @@
 package bullscows;
 
+import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
+        
+//        Scanner scanner = new Scanner(System.in);
+        String s = "9305"; // secret
+//      String g = scanner.next(); // guess
+        String g = "1234";
+        
+        int bulls = 0;
+        int cows = 0; 
+        for(int i = 0; i < g.length(); i++) {
+            if ( s.contains(g.substring(i,i+1)) && s.charAt(i) == g.charAt(i)) {
+                bulls++; 
+            } else if (s.contains(g.substring(i,i+1))){
+                cows++;
+            } 
+            System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, g, bulls, cows); 
+        }
+
+        
+
+
+
+/* 
         System.out.println("The secret code is prepared: ****.");
         int cows = 0;
         int bulls = 0;
@@ -26,6 +49,7 @@ public class Main {
             System.out.println("Grade: " + getGrade(bulls, cows));
         }
         System.out.println("Congrats! The secret code is 9305");
+*/
     }
 
     private static String getGrade(int bulls, int cows) {
