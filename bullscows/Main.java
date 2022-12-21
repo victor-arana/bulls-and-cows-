@@ -6,53 +6,37 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         
-//        Scanner scanner = new Scanner(System.in);
         String s = "9305"; // secret
-//      String g = scanner.next(); // guess
-        String g = "1234";
-        
-        int bulls = 0;
-        int cows = 0; 
-        for(int i = 0; i < g.length(); i++) {
+        String[] guesses = {"9305", "3059", "3590", "5930", "5039"};
+
+        for (int i = 0; i < guesses.length; i++) {
+            byte[] grade = calculateGrade(s,guesses[i]);
+            System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, guesses[i], grade[0], grade[1]); 
+        }
+ 
+    }
+    /*
+     * Returns a array of integers as follows:
+     * grade[0]: number of bulls
+     * grade[1]: number of cows
+     */ 
+    private static byte[] calculateGrade(String secret, String guess) {
+        String s = secret;
+        String g = guess; 
+        byte[] grade = new byte[2];
+        for(byte i = 0; i < g.length(); i++) {
             if ( s.contains(g.substring(i,i+1)) && s.charAt(i) == g.charAt(i)) {
-                bulls++; 
+                grade[0]++; // bulls
             } else if (s.contains(g.substring(i,i+1))){
-                cows++;
+                grade[1]++; // cows
             } 
-            System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, g, bulls, cows); 
         }
-
-        
-
-
-
-/* 
-        System.out.println("The secret code is prepared: ****.");
-        int cows = 0;
-        int bulls = 0;
-        for (int i = 1; i <= 7; i++) {
-            System.out.printf("%nTurn %d. Answer:%n", i);
-            // The nextInt(9000) method generates a random integer between 0
-            // and 8999, and then adding 1000 to it gives us a random integer
-            // between 1000 and 9999.
-            Random random = new Random();
-            int randomInt = random.nextInt(9000) + 1000;
-            boolean isBull = random.nextBoolean();
-            boolean isCow = random.nextBoolean();
-            if (isBull) {
-                bulls++;
-            }
-            if (isCow) {
-                cows++;
-            }
-            System.out.println(randomInt);
-            System.out.println("Grade: " + getGrade(bulls, cows));
-        }
-        System.out.println("Congrats! The secret code is 9305");
-*/
+        //Remove comment for debug purposes
+        //System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, g, grade[0], grade[1]); 
+        return grade;
     }
 
-    private static String getGrade(int bulls, int cows) {
+    private static String showGrade(int bulls, int cows) {
         if (bulls > 1 && cows > 1) {
             return String.format("%d bull and %d cow.%n",bulls, cows);
         } else if (bulls > 1) {
