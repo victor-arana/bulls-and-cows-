@@ -2,10 +2,19 @@ package bullscows;
 
 import java.util.Scanner;
 import java.util.Random;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        testSuiteGuesses();        
+        String secret = "9305";
+
+        Scanner scanner = new Scanner(System.in);
+        String guess = scanner.next();
+        
+        byte[] grade = calculateGrade(guess, secret);
+        System.out.println(showGrade(grade[0], grade[1], secret));
+
+        //testSuiteGuesses();
     }
 
     private static void testSuiteGuesses() {
@@ -74,15 +83,20 @@ public class Main {
         return grade;
     }
 
-    private static String showGrade(int bulls, int cows) {
-        if (bulls > 1 && cows > 1) {
-            return String.format("%d bull and %d cow.%n",bulls, cows);
-        } else if (bulls > 1) {
-            return String.format("%d bull.%n", bulls);
-        } else if (cows > 1) {
-            return String.format("%d cow.%n", cows);
+    private static String showGrade(int bulls, int cows, String secret) {
+        String message = "";
+        if (bulls >= 1 && cows >= 1) {
+            message = "Grade: %d bull(s) and %d cow(s). The secret code is %s.%n";
+            return String.format(message, bulls, cows, secret);
+        } else if (bulls >= 1) {
+            message = "Grade: %d bull(s). The secret code is %s.%n";
+            return String.format(message, bulls, secret);
+        } else if (cows >= 1) {
+            message = "Grade: %d cow(s). The secret code is %s.%n";
+            return String.format(message, cows, secret);
         } else {
-            return "";
+            message = "Grade: None. The secret code is %s.%n";
+            return String.format(message, secret);
         }
     }
 }
