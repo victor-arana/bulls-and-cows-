@@ -5,7 +5,10 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        
+        testSuiteGuesses();        
+    }
+
+    private static void testSuiteGuesses() {
         String s = "9305"; // secret
 
         // Guesses for 4 bulls, 0 cows
@@ -41,7 +44,6 @@ public class Main {
         
         System.out.println("Repetitive 2 bulls, 2 cows");
         testGuesses(new String[]{"9955"}, s);
- 
     }
 
     private static void testGuesses(String[] guesses, String s) {
