@@ -17,6 +17,20 @@ public class Main {
         //testSuiteGuesses();
     }
 
+    /**
+     * Generates a pseudo-random number of a given length with
+     * unique digits.
+     *
+     * If digits > 10, print "Error"
+     * secretCode may contain any digits from 0 to 9, but only once
+     * secret Code shouldn't start with a digit 0;
+     * @param digits
+     * @return secretCode
+     */
+    private static byte generatePseudoRandomNumber(byte digits) {
+        return 0;
+    }
+
     private static void testSuiteGuesses() {
         String s = "9305"; // secret
 
