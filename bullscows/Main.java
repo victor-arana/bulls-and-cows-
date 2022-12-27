@@ -1,20 +1,31 @@
 package bullscows;
 
 import java.util.Scanner;
-import java.util.Random;
 import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        String secret = "9305";
+       // String secret = "9305";
 
-        Scanner scanner = new Scanner(System.in);
-        String guess = scanner.next();
+        //Scanner scanner = new Scanner(System.in);
+        //String guess = scanner.next();
         
-        byte[] grade = calculateGrade(guess, secret);
-        System.out.println(showGrade(grade[0], grade[1], secret));
+       // byte[] grade = calculateGrade(guess, secret);
+       // System.out.println(showGrade(grade[0], grade[1], secret));
+
+        testSuiteGeneratePseudoRandomNumber();
 
         //testSuiteGuesses();
+    }
+
+    private static void testSuiteGeneratePseudoRandomNumber() {
+        Scanner scanner = new Scanner(System.in);
+        while(scanner.hasNextLine()){
+            String[] columns = (scanner.nextLine()).split(","); 
+            byte length = Byte.parseByte(columns[0]);
+            String expectedMessage = columns[1];
+            System.out.printf("Length: %d, Message: %s %n", length, expectedMessage);
+        }
     }
 
     /**
