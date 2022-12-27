@@ -24,7 +24,21 @@ public class Main {
             String[] columns = (scanner.nextLine()).split(","); 
             byte length = Byte.parseByte(columns[0]);
             String expectedMessage = columns[1];
-            System.out.printf("Length: %d, Message: %s %n", length, expectedMessage);
+            //long actualValue = generatePseudoRandomNumber(length);
+            showPseudoRandomNumber(length);
+            //System.out.printf("Length: %d, expected: %s , actual: %d %n", length, expectedMessage, actualValue);
+        }
+    }
+
+    private static void showPseudoRandomNumber(byte digits) {
+        String template = "";
+        if (digits > 10) {
+            template = "Error: can't generate a secret number with a length of %d because there aren't enough unique digits.%n";
+            System.out.printf(template, digits);
+        } else {
+            template = "The random secret number is %d.%n";
+            long randomNumber = generatePseudoRandomNumber(digits);
+            System.out.printf(template, randomNumber);
         }
     }
 
@@ -38,8 +52,21 @@ public class Main {
      * @param digits
      * @return secretCode
      */
-    private static byte generatePseudoRandomNumber(byte digits) {
-        return 0;
+    private static long generatePseudoRandomNumber(byte digits) {
+        StringBuilder sb = new StringBuilder();
+        do {
+            String pseudoRandomNumber = String.valueOf(System.nanoTime());
+            if (pseudoRandomNumber.startsWith("0")){
+                pseudoRandomNumber = sb.substring(1, pseudoRandomNumber.length());
+            }
+            for (Character c : pseudoRandomNumber.toCharArray()) {
+                sb.append(sb.indexOf(String.valueOf(c)) < 0 ? c : "");
+                if (sb.length() >= digits) break;
+            }
+        } while (sb.length() < digits);
+
+        Long number = Long.valueOf(sb.toString());
+        return number;
     }
 
     private static void testSuiteGuesses() {
@@ -57,15 +84,15 @@ public class Main {
         System.out.println("3 bulls:");
         testGuesses(new String[]{"9306", "9385", "9505", "1305"}, s);
 
-        // Guesses for 2 bulls, 2 cows 
+        // Guesses for 2 bulls, 2 cows
         System.out.println("2 bulls, 2 cows");
         testGuesses(new String[]{"9350", "9035", "5309", "3905"}, s);
- 
-        // Guesses for 0 bulls, 2 cows 
+
+        // Guesses for 0 bulls, 2 cows
         System.out.println("0 bulls, 2 cows ");
         testGuesses(new String[]{"1293", "5012", "3512", "5129"}, s);
-        
-        // Guesses for 0 bulls, 0 cows 
+
+        // Guesses for 0 bulls, 0 cows
         System.out.println("0 bulls, 0 cows ");
         testGuesses(new String[]{"1246", "7184", "4862", "2718"}, s);
 
@@ -75,7 +102,7 @@ public class Main {
 
         System.out.println("Repetitive 1 bulls, 3 cows");
         testGuesses(new String[]{"9999"}, s);
-        
+
         System.out.println("Repetitive 2 bulls, 2 cows");
         testGuesses(new String[]{"9955"}, s);
     }
@@ -83,7 +110,7 @@ public class Main {
     private static void testGuesses(String[] guesses, String s) {
         for (int i = 0; i < guesses.length; i++) {
             byte[] grade = calculateGrade(s,guesses[i]);
-            System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, guesses[i], grade[0], grade[1]); 
+            System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, guesses[i], grade[0], grade[1]);
         }
     }
 
