@@ -43,27 +43,31 @@ public class Main {
     }
 
     /**
-     * Generates a pseudo-random number of a given length with
-     * unique digits.
+     * Generates a pseudo-random number of a given length  with
+     * the following characteristics:
+     * - Contains unique digits from 0 to 9.
+     * - It can not start with the 0 digit
      *
-     * If digits > 10, print "Error"
-     * secretCode may contain any digits from 0 to 9, but only once
-     * secret Code shouldn't start with a digit 0;
-     * @param digits
+     * @param len integer number between 0 and 9. If
+     *                     numberLength > 10 it returns -1.
+     *
      * @return secretCode
      */
-    private static long generatePseudoRandomNumber(byte digits) {
+    private static long generatePseudoRandomNumber(byte len) {
         StringBuilder sb = new StringBuilder();
         do {
-            String pseudoRandomNumber = String.valueOf(System.nanoTime());
-            if (pseudoRandomNumber.startsWith("0")){
-                pseudoRandomNumber = sb.substring(1, pseudoRandomNumber.length());
+            String number = String.valueOf(System.nanoTime());
+            // Exclude 0 from first position
+            if (number.startsWith("0")){
+                number = sb.substring(1, number.length());
             }
-            for (Character c : pseudoRandomNumber.toCharArray()) {
+            // Build the pseudo random number excluding repeated digits
+            for (Character c : number.toCharArray()) {
                 sb.append(sb.indexOf(String.valueOf(c)) < 0 ? c : "");
-                if (sb.length() >= digits) break;
+                // Stop if we reached the desired length.
+                if (sb.length() >= len) break;
             }
-        } while (sb.length() < digits);
+        } while (sb.length() < len);
 
         Long number = Long.valueOf(sb.toString());
         return number;
