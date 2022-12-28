@@ -54,17 +54,22 @@ public class Main {
      * @return secretCode
      */
     private static long generatePseudoRandomNumber(byte len) {
+        if (!(len >= 0 && len <= 9)) return -1;
+
         StringBuilder sb = new StringBuilder();
         do {
             String number = String.valueOf(System.nanoTime());
+            number = (new StringBuilder(number)).reverse().toString();
             // Exclude 0 from first position
             if (number.startsWith("0")){
                 number = sb.substring(1, number.length());
             }
             // Build the pseudo random number excluding repeated digits
-            for (Character c : number.toCharArray()) {
-                sb.append(sb.indexOf(String.valueOf(c)) < 0 ? c : "");
-                // Stop if we reached the desired length.
+            for(int i = 0; i < number.length(); i++) {
+                String c = String.valueOf(number.charAt(i));
+                // Append only new characters
+                sb.append(sb.indexOf(c) < 0 ? c : "");
+                // Stop if we reached  the desired length
                 if (sb.length() >= len) break;
             }
         } while (sb.length() < len);
