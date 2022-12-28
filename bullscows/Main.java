@@ -1,7 +1,6 @@
 package bullscows;
 
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,12 +31,12 @@ public class Main {
 
     private static void showPseudoRandomNumber(byte digits) {
         String template = "";
-        if (digits > 10) {
+        String randomNumber = generatePseudoRandomNumber(digits);
+        if (randomNumber.equals("-1")) {
             template = "Error: can't generate a secret number with a length of %d because there aren't enough unique digits.%n";
             System.out.printf(template, digits);
         } else {
-            template = "The random secret number is %d.%n";
-            long randomNumber = generatePseudoRandomNumber(digits);
+            template = "The random secret number is %s.%n";
             System.out.printf(template, randomNumber);
         }
     }
@@ -49,33 +48,30 @@ public class Main {
      * - It can not start with the 0 digit
      *
      * @param len integer number between 0 and 9. If
-     *                     numberLength > 10 it returns -1.
-     *
+     *            numberLength > 10 it returns -1.
      * @return secretCode
      */
-    private static long generatePseudoRandomNumber(byte len) {
-        if (!(len >= 0 && len <= 9)) return -1;
-
+    private static String generatePseudoRandomNumber(byte len) {
+        // Validate length is in the range [0,9]
+        if (!(len >= 0 && len <= 9)) return "-1";
         StringBuilder sb = new StringBuilder();
         do {
             String number = String.valueOf(System.nanoTime());
             number = (new StringBuilder(number)).reverse().toString();
             // Exclude 0 from first position
             if (number.startsWith("0")){
-                number = sb.substring(1, number.length());
+                number = number.substring(1, number.length());
             }
             // Build the pseudo random number excluding repeated digits
             for(int i = 0; i < number.length(); i++) {
                 String c = String.valueOf(number.charAt(i));
                 // Append only new characters
-                sb.append(sb.indexOf(c) < 0 ? c : "");
+                sb.append(sb.indexOf(c) == -1 ? c : "");
                 // Stop if we reached  the desired length
                 if (sb.length() >= len) break;
             }
         } while (sb.length() < len);
-
-        Long number = Long.valueOf(sb.toString());
-        return number;
+        return sb.toString();
     }
 
     private static void testSuiteGuesses() {
