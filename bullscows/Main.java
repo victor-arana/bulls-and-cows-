@@ -4,9 +4,13 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("Please, enter the secret code's length:");
+        Scanner scanner = new Scanner(System.in);
+        byte secretCodeLength = scanner.nextByte();
+        String secretCode = generatePseudoRandomNumber(secretCodeLength);
+        System.out.printf("Secret code: %s", secretCode);
        // String secret = "9305";
 
-        //Scanner scanner = new Scanner(System.in);
         //String guess = scanner.next();
         
        // byte[] grade = calculateGrade(guess, secret);
@@ -120,24 +124,24 @@ public class Main {
     }
 
     /*
-     * Returns a array of integers as follows:
+     * Returns an array of integers as follows:
      * grade[0]: number of bulls
      * grade[1]: number of cows
      */ 
     private static byte[] calculateGrade(String secret, String guess) {
-        String s = secret;
-        String g = guess; 
-        byte[] grade = new byte[2];
-        for(byte i = 0; i < g.length(); i++) {
-            if ( s.contains(g.substring(i,i+1)) && s.charAt(i) == g.charAt(i)) {
-                grade[0]++; // bulls
-            } else if (s.contains(g.substring(i,i+1))){
-                grade[1]++; // cows
+        byte bulls = 0;
+        byte cows = 0;
+        for(byte i = 0; i < guess.length(); i++) {
+            boolean guessCharInSecret = secret.contains(guess.substring(i, i + 1));
+            if (guessCharInSecret && guess.charAt(i) == secret.charAt(i)) {
+                bulls++;
+            } else if (guessCharInSecret){
+                cows++;
             } 
         }
         //Remove comment for debug purposes
-        //System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, g, grade[0], grade[1]); 
-        return grade;
+        //System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", secret, guess, grade[0], grade[1]);
+        return new byte[]{bulls, cows};
     }
 
     private static String showGrade(int bulls, int cows, String secret) {
