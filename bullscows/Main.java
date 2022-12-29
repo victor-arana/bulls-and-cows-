@@ -123,25 +123,40 @@ public class Main {
         }
     }
 
-    /*
-     * Returns an array of integers as follows:
-     * grade[0]: number of bulls
-     * grade[1]: number of cows
-     */ 
+    /**
+     * Calculates the number of bulls and cows for a given secret and guess.
+     *
+     * A bull is a correct letter in the correct position.
+     * A cow is a correct letter in the wrong position.
+     *
+     * @param secret the secret string
+     * @param guess the guess string
+     * @return an array with the number of bulls in the first element and the number of cows in the second element
+     */
     private static byte[] calculateGrade(String secret, String guess) {
-        byte bulls = 0;
-        byte cows = 0;
+        byte bulls = 0, cows = 0;
+        // Iterate over each character in the guess string
         for(byte i = 0; i < guess.length(); i++) {
+            // Check if the character at position i in the guess string is present in the secret string
             boolean guessCharInSecret = secret.contains(guess.substring(i, i + 1));
+
+            // If the character is present in the secret string and is in the same position in both strings,
+            // increment the number of bulls
             if (guessCharInSecret && guess.charAt(i) == secret.charAt(i)) {
                 bulls++;
+
+                // If the character is present in the secret string but is not in the same position,
+                // increment the number of cows
             } else if (guessCharInSecret){
                 cows++;
             } 
         }
+
+        // Return an array with the number of bulls in the first element and the number of cows in the second element
+        byte[] grade =  new byte[]{bulls, cows};
         //Remove comment for debug purposes
         //System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", secret, guess, grade[0], grade[1]);
-        return new byte[]{bulls, cows};
+        return grade;
     }
 
     private static String showGrade(int bulls, int cows, String secret) {
