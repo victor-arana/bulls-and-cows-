@@ -159,20 +159,37 @@ public class Main {
         return grade;
     }
 
-    private static String showGrade(int bulls, int cows, String secret) {
-        String message = "";
+    /**
+     * Builds a string representation of the grade for a given number of bulls and cows.
+     *
+     * @param bulls the number of bulls
+     * @param cows the number of cows
+     * @param secret the secret code
+     * @return a string representation of the grade
+     */
+    private static String buildGradeResponse(int bulls, int cows, String secret) {
+        String template = "", gradeResponse = "";
+
+        // There are both bulls and cows
         if (bulls >= 1 && cows >= 1) {
-            message = "Grade: %d bull(s) and %d cow(s). The secret code is %s.%n";
-            return String.format(message, bulls, cows, secret);
-        } else if (bulls >= 1) {
-            message = "Grade: %d bull(s). The secret code is %s.%n";
-            return String.format(message, bulls, secret);
-        } else if (cows >= 1) {
-            message = "Grade: %d cow(s). The secret code is %s.%n";
-            return String.format(message, cows, secret);
-        } else {
-            message = "Grade: None. The secret code is %s.%n";
-            return String.format(message, secret);
+            template = "Grade: %d bull(s) and %d cow(s). The secret code is %s.%n";
+            gradeResponse = String.format(template, bulls, cows, secret);
         }
+        // There are only bulls
+        else if (bulls >= 1) {
+            template = "Grade: %d bull(s). The secret code is %s.%n";
+            gradeResponse = String.format(template, bulls, secret);
+        }
+        // There are only cows
+        else if (cows >= 1) {
+            template = "Grade: %d cow(s). The secret code is %s.%n";
+            gradeResponse = String.format(template, cows, secret);
+        }
+        // There are neither bulls nor cows
+        else {
+            template = "Grade: None. The secret code is %s.%n";
+            gradeResponse = String.format(template, secret);
+        }
+        return gradeResponse;
     }
 }
