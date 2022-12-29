@@ -7,8 +7,8 @@ public class Main {
         System.out.println("Please, enter the secret code's length:");
         Scanner scanner = new Scanner(System.in);
         byte secretCodeLength = scanner.nextByte();
+
         String secret = generatePseudoRandomNumber(secretCodeLength);
-        secret = "9374";
         System.out.println("Okay, let's start a game!");
         String guess = "";
         byte turnCount = 0;
@@ -19,33 +19,6 @@ public class Main {
             System.out.println(buildGradeResponse(grade[0], grade[1], secret));
         } while (!guess.equals(secret));
         System.out.println("Congratulations! You guessed the secret code.");
-
-        //testSuiteGeneratePseudoRandomNumber();
-        //testSuiteGuesses();
-    }
-
-    private static void testSuiteGeneratePseudoRandomNumber() {
-        Scanner scanner = new Scanner(System.in);
-        while(scanner.hasNextLine()){
-            String[] columns = (scanner.nextLine()).split(","); 
-            byte length = Byte.parseByte(columns[0]);
-            String expectedMessage = columns[1];
-            //long actualValue = generatePseudoRandomNumber(length);
-            showPseudoRandomNumber(length);
-            //System.out.printf("Length: %d, expected: %s , actual: %d %n", length, expectedMessage, actualValue);
-        }
-    }
-
-    private static void showPseudoRandomNumber(byte digits) {
-        String template = "";
-        String randomNumber = generatePseudoRandomNumber(digits);
-        if (randomNumber.equals("-1")) {
-            template = "Error: can't generate a secret number with a length of %d because there aren't enough unique digits.%n";
-            System.out.printf(template, digits);
-        } else {
-            template = "The random secret number is %s.%n";
-            System.out.printf(template, randomNumber);
-        }
     }
 
     /**
@@ -79,6 +52,100 @@ public class Main {
             }
         } while (sb.length() < len);
         return sb.toString();
+    }
+
+    /**
+     * Calculates the number of bulls and cows for a given secret and guess.
+     *
+     * A bull is a correct letter in the correct position.
+     * A cow is a correct letter in the wrong position.
+     *
+     * @param secret the secret string
+     * @param guess the guess string
+     * @return an array with the number of bulls in the first element and the number of cows in the second element
+     */
+    private static byte[] calculateGrade(String secret, String guess) {
+        byte bulls = 0, cows = 0;
+        // Iterate over each character in the guess string
+        for(byte i = 0; i < guess.length(); i++) {
+            // Check if the character at position i in the guess string is present in the secret string
+            boolean guessCharInSecret = secret.contains(guess.substring(i, i + 1));
+
+            // If the character is present in the secret string and is in the same position in both strings,
+            // increment the number of bulls
+            if (guessCharInSecret && guess.charAt(i) == secret.charAt(i)) {
+                bulls++;
+
+                // If the character is present in the secret string but is not in the same position,
+                // increment the number of cows
+            } else if (guessCharInSecret){
+                cows++;
+            }
+        }
+
+        // Return an array with the number of bulls in the first element and the number of cows in the second element
+        byte[] grade =  new byte[]{bulls, cows};
+        //Remove comment for debug purposes
+        //System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", secret, guess, grade[0], grade[1]);
+        return grade;
+    }
+
+    /**
+     * Builds a string representation of the grade for a given number of bulls and cows.
+     *
+     * @param bulls the number of bulls
+     * @param cows the number of cows
+     * @param secret the secret code
+     * @return a string representation of the grade
+     */
+    private static String buildGradeResponse(int bulls, int cows, String secret) {
+        String template = "", gradeResponse = "";
+
+        // There are both bulls and cows
+        if (bulls >= 1 && cows >= 1) {
+            template = "Grade: %d bull(s) and %d cow(s). The secret code is %s.%n";
+            gradeResponse = String.format(template, bulls, cows, secret);
+        }
+        // There are only bulls
+        else if (bulls >= 1) {
+            template = "Grade: %d bull(s). The secret code is %s.%n";
+            gradeResponse = String.format(template, bulls, secret);
+        }
+        // There are only cows
+        else if (cows >= 1) {
+            template = "Grade: %d cow(s). The secret code is %s.%n";
+            gradeResponse = String.format(template, cows, secret);
+        }
+        // There are neither bulls nor cows
+        else {
+            template = "Grade: None. The secret code is %s.%n";
+            gradeResponse = String.format(template, secret);
+        }
+        return gradeResponse;
+    }
+
+    private static void testSuiteGeneratePseudoRandomNumber() {
+        Scanner scanner = new Scanner(System.in);
+        while(scanner.hasNextLine()){
+            String[] columns = (scanner.nextLine()).split(","); 
+            byte length = Byte.parseByte(columns[0]);
+            String expectedMessage = columns[1];
+            //long actualValue = generatePseudoRandomNumber(length);
+            showPseudoRandomNumber(length);
+            //System.out.printf("Length: %d, expected: %s , actual: %d %n", length, expectedMessage, actualValue);
+        }
+    }
+
+    private static void showPseudoRandomNumber(byte digits) {
+        String template = "";
+        String randomNumber = generatePseudoRandomNumber(digits);
+        if (randomNumber.equals("-1")) {
+            template = "Error: can't generate a secret number with a length of %d because there aren't enough unique digits.%n";
+            System.out.printf(template, digits);
+        } else {
+            template = "The random secret number is %s.%n";
+            System.out.printf(template, randomNumber);
+        }
     }
 
     private static void testSuiteGuesses() {
@@ -126,73 +193,7 @@ public class Main {
         }
     }
 
-    /**
-     * Calculates the number of bulls and cows for a given secret and guess.
-     *
-     * A bull is a correct letter in the correct position.
-     * A cow is a correct letter in the wrong position.
-     *
-     * @param secret the secret string
-     * @param guess the guess string
-     * @return an array with the number of bulls in the first element and the number of cows in the second element
-     */
-    private static byte[] calculateGrade(String secret, String guess) {
-        byte bulls = 0, cows = 0;
-        // Iterate over each character in the guess string
-        for(byte i = 0; i < guess.length(); i++) {
-            // Check if the character at position i in the guess string is present in the secret string
-            boolean guessCharInSecret = secret.contains(guess.substring(i, i + 1));
 
-            // If the character is present in the secret string and is in the same position in both strings,
-            // increment the number of bulls
-            if (guessCharInSecret && guess.charAt(i) == secret.charAt(i)) {
-                bulls++;
 
-                // If the character is present in the secret string but is not in the same position,
-                // increment the number of cows
-            } else if (guessCharInSecret){
-                cows++;
-            } 
-        }
 
-        // Return an array with the number of bulls in the first element and the number of cows in the second element
-        byte[] grade =  new byte[]{bulls, cows};
-        //Remove comment for debug purposes
-        //System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", secret, guess, grade[0], grade[1]);
-        return grade;
-    }
-
-    /**
-     * Builds a string representation of the grade for a given number of bulls and cows.
-     *
-     * @param bulls the number of bulls
-     * @param cows the number of cows
-     * @param secret the secret code
-     * @return a string representation of the grade
-     */
-    private static String buildGradeResponse(int bulls, int cows, String secret) {
-        String template = "", gradeResponse = "";
-
-        // There are both bulls and cows
-        if (bulls >= 1 && cows >= 1) {
-            template = "Grade: %d bull(s) and %d cow(s). The secret code is %s.%n";
-            gradeResponse = String.format(template, bulls, cows, secret);
-        }
-        // There are only bulls
-        else if (bulls >= 1) {
-            template = "Grade: %d bull(s). The secret code is %s.%n";
-            gradeResponse = String.format(template, bulls, secret);
-        }
-        // There are only cows
-        else if (cows >= 1) {
-            template = "Grade: %d cow(s). The secret code is %s.%n";
-            gradeResponse = String.format(template, cows, secret);
-        }
-        // There are neither bulls nor cows
-        else {
-            template = "Grade: None. The secret code is %s.%n";
-            gradeResponse = String.format(template, secret);
-        }
-        return gradeResponse;
-    }
 }
