@@ -7,17 +7,20 @@ public class Main {
         System.out.println("Please, enter the secret code's length:");
         Scanner scanner = new Scanner(System.in);
         byte secretCodeLength = scanner.nextByte();
-        String secretCode = generatePseudoRandomNumber(secretCodeLength);
-        System.out.printf("Secret code: %s", secretCode);
-       // String secret = "9305";
+        String secret = generatePseudoRandomNumber(secretCodeLength);
+        secret = "9374";
+        System.out.println("Okay, let's start a game!");
+        String guess = "";
+        byte turnCount = 0;
+        do{
+            System.out.printf("Turn %d:%n", ++turnCount);
+            guess = scanner.next();
+            byte[] grade = calculateGrade(guess, secret);
+            System.out.println(buildGradeResponse(grade[0], grade[1], secret));
+        } while (!guess.equals(secret));
+        System.out.println("Congratulations! You guessed the secret code.");
 
-        //String guess = scanner.next();
-        
-       // byte[] grade = calculateGrade(guess, secret);
-       // System.out.println(showGrade(grade[0], grade[1], secret));
-
-        testSuiteGeneratePseudoRandomNumber();
-
+        //testSuiteGeneratePseudoRandomNumber();
         //testSuiteGuesses();
     }
 
