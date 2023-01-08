@@ -1,4 +1,5 @@
 5,The random secret number is 48379.
 4,The random secret number is 5213.
+6,The random secret number is 5213.
 -1,Error: Can't generate a secret number with a length of -1 because there aren't enough unique digits.
 11,Error: Can't generate a secret number with a length of 11 because there aren't enough unique digits.

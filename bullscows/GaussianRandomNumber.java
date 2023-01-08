@@ -11,17 +11,13 @@ public class GaussianRandomNumber {
         int N = scanner.nextInt();
         double M = scanner.nextDouble();
 
-        System.out.printf("K: %d, N: %d, M: %f%n", K, N, M);
-
-        boolean lessOrEqual = false;
+        boolean lessOrEqual;
         do {
             double[] gaussianRandomNumbers = generateGaussianRandomNumbers(K++, N);
-            System.out.println(Arrays.toString(gaussianRandomNumbers));
             lessOrEqual = setIsLessOrEqual(gaussianRandomNumbers, M);
-        } while(!lessOrEqual);
+        } while (!lessOrEqual);
 
-        System.out.printf("K: %d, N: %d, M: %f%n", K-1, N, M);
-
+        System.out.println(K-1);
     }
 
     private static double[] generateGaussianRandomNumbers(int K, int N) {

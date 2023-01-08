@@ -1,9 +1,18 @@
 package bullscows;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        //testSuiteCalculateGrade();
+        //startGame();
+        while(true){
+            generatePseudoRandomNumber((byte) 6);
+        }
+    }
+
+    private static void startGame() {
         System.out.println("Please, enter the secret code's length:");
         Scanner scanner = new Scanner(System.in);
         byte secretCodeLength = scanner.nextByte();
@@ -34,24 +43,25 @@ public class Main {
     private static String generatePseudoRandomNumber(byte len) {
         // Validate length is in the range [0,9]
         if (!(len >= 0 && len <= 9)) return "-1";
+
         StringBuilder sb = new StringBuilder();
-        do {
-            String number = String.valueOf(System.nanoTime());
-            number = (new StringBuilder(number)).reverse().toString();
-            // Exclude 0 from first position
-            if (number.startsWith("0")){
-                number = number.substring(1, number.length());
-            }
-            // Build the pseudo random number excluding repeated digits
-            for(int i = 0; i < number.length(); i++) {
-                String c = String.valueOf(number.charAt(i));
-                // Append only new characters
-                sb.append(sb.indexOf(c) == -1 ? c : "");
-                // Stop if we reached  the desired length
-                if (sb.length() >= len) break;
-            }
-        } while (sb.length() < len);
+        sb.append(nextInt(1,10));
+        while ( sb.length() < len ) {
+            sb.append(nextIntWithout(0,10,sb.toString()));
+        }
         return sb.toString();
+    }
+
+    private static int nextIntWithout(int a, int b, String exclusions) {
+        int candidate = nextInt(a, b);
+        while (exclusions.contains(String.valueOf(candidate))){
+            candidate = nextInt(a, b);
+        }
+        return candidate;
+    }
+
+    private static int nextInt(int a, int b) {
+        return new Random().nextInt(b - a + 1) + a;
     }
 
     /**
@@ -148,45 +158,47 @@ public class Main {
         }
     }
 
-    private static void testSuiteGuesses() {
+    private static void testSuiteCalculateGrade() {
         String s = "9305"; // secret
 
         // Guesses for 4 bulls, 0 cows
         System.out.println("4 bulls, 0 cows:");
-        testGuesses(new String[]{"9305"}, s);
+        testCalculateGrade(new String[]{"9305"}, s);
 
         // Guesses for 0 bulls, 4 cows
         System.out.println("0 bulls, 4 cows:");
-        testGuesses(new String[]{"3059", "3590", "5930", "5039"}, s);
+        testCalculateGrade(new String[]{"3059", "3590", "5930", "5039"}, s);
 
         // Guesses for 3 bulls
         System.out.println("3 bulls:");
-        testGuesses(new String[]{"9306", "9385", "9505", "1305"}, s);
+        testCalculateGrade(new String[]{"9306", "9385", "9505", "1305"}, s);
 
         // Guesses for 2 bulls, 2 cows
         System.out.println("2 bulls, 2 cows");
-        testGuesses(new String[]{"9350", "9035", "5309", "3905"}, s);
+        testCalculateGrade(new String[]{"9350", "9035", "5309", "3905"}, s);
 
         // Guesses for 0 bulls, 2 cows
         System.out.println("0 bulls, 2 cows ");
-        testGuesses(new String[]{"1293", "5012", "3512", "5129"}, s);
+        testCalculateGrade(new String[]{"1293", "5012", "3512", "5129"}, s);
 
         // Guesses for 0 bulls, 0 cows
         System.out.println("0 bulls, 0 cows ");
-        testGuesses(new String[]{"1246", "7184", "4862", "2718"}, s);
+        testCalculateGrade(new String[]{"1246", "7184", "4862", "2718"}, s);
 
         // Repetitive digits
         System.out.println("Repetitive 0 bulls, 0 cows");
-        testGuesses(new String[]{"1111"}, s);
+        testCalculateGrade(new String[]{"1111"}, s);
 
         System.out.println("Repetitive 1 bulls, 3 cows");
-        testGuesses(new String[]{"9999"}, s);
+        testCalculateGrade(new String[]{"9999"}, s);
 
         System.out.println("Repetitive 2 bulls, 2 cows");
-        testGuesses(new String[]{"9955"}, s);
+        testCalculateGrade(new String[]{"9955"}, s);
+
+        System.out.println("Repetitive ");
     }
 
-    private static void testGuesses(String[] guesses, String s) {
+    private static void testCalculateGrade(String[] guesses, String s) {
         for (int i = 0; i < guesses.length; i++) {
             byte[] grade = calculateGrade(s,guesses[i]);
             System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, guesses[i], grade[0], grade[1]);
