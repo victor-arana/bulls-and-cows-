@@ -5,11 +5,18 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        //testSuiteCalculateGrade();
         //startGame();
-        while(true){
-            generatePseudoRandomNumber((byte) 6);
-        }
+        startGame_V2();
+    }
+
+    private static void startGame_V2(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Input the length of the secret code:");
+        byte secretCodeLength = scanner.nextByte();
+
+        System.out.println("Input the number of possible symbols in the code:");
+        byte possibleSymbols = scanner.nextByte();
     }
 
     private static void startGame() {
@@ -33,6 +40,7 @@ public class Main {
     /**
      * Generates a pseudo-random number of a given length  with
      * the following characteristics:
+     *
      * - Contains unique digits from 0 to 9.
      * - It can not start with the 0 digit
      *
