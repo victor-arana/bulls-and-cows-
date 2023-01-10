@@ -1,12 +1,12 @@
 package bullscows;
 
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         //startGame();
-        startGame_V2();
+        generatePseudoRandomNumber_v2_test_02();
+        //startGame_V2();
     }
 
     private static void startGame_V2(){
@@ -36,6 +36,107 @@ public class Main {
         } while (!guess.equals(secret));
         System.out.println("Congratulations! You guessed the secret code.");
     }
+
+    
+    /**
+     * Generates a pseudo-random number of a given a secret code length
+     * and a number of possible symbols. The secret code has the following
+     * characteristics:
+     *
+     * - Can contain unique digits from 0 to 9.
+     * - Can contain lowercase latin characters from a-z
+     *
+     * @param len integer number between 0 and 9. If
+     *            numberLength > 36 it returns -1.
+     * @param symbols number of possible characters 
+     * @return secretCode
+     */
+    private static String generatePseudoRandomNumber_v2(byte len, byte symbols) {
+        // Validate length is in the range [0,36]
+        if (!(len >= 0 && len <= 36)) {
+             return "-1";
+        } else {
+            // isNextCharOrDigit?
+            StringBuilder sb = new StringBuilder();
+            while (sb.length() < len) {
+                boolean addDigit =  isNextCharDigit();
+                addDigit = true;
+                if (addDigit) {
+                    System.out.println("Generate Random Digit");
+                    sb.append(nextIntWithout(0,9,sb.toString()));
+                } else { // nextChar is Letter
+                    System.out.print("Generate Random letter");
+                    sb.append("V");
+                }
+            }
+
+            // if nextCharIsDigit?
+            //      generateRandomDigit in 0-9
+            // else nextCharIsLetter
+            //      generateRandomCharacter from available characters
+            // while length < requested length
+            //      appendCharacter.
+            return sb.toString();
+        }
+    }
+
+    private static boolean isNextCharDigit() {
+        return new Random().nextBoolean();
+    }
+
+    private static void generatePseudoRandomNumber_v2_test_01() {
+        // 1. Given lenght > 36 return "-1"
+        byte len = 37;
+        byte symbols = 1;
+        
+        String expected = "-1";
+        String actual = generatePseudoRandomNumber_v2(len, symbols);
+        System.out.printf("Result: %s, expected: %s, actual: %s:",
+                            expected == actual ? "success" : "FAIL",
+                            expected, actual);
+    }
+
+
+    private static void generatePseudoRandomNumber_v2_test_02() {
+        // 1. Given length > 0 return != "-1"
+        byte len = 2;
+        byte symbols = 0;
+        
+        String expected = "";
+        String actual = generatePseudoRandomNumber_v2(len, symbols);
+
+        boolean first_character_is_a_digit = Character.isDigit(actual.charAt(0));
+        boolean second_character_is_a_digit = Character.isDigit(actual.charAt(1));
+
+        boolean there_are_repeated_characters = hasRepeatedCharacters(actual);
+
+        boolean expectedResult = first_character_is_a_digit
+                && second_character_is_a_digit && !there_are_repeated_characters;
+
+        // unique characters
+
+        System.out.printf("Result: %s, actual: %s:",
+                            expectedResult ? "success" : "FAIL",
+                            actual);
+    }
+
+    private static boolean hasRepeatedCharacters(String string){
+        int stringLenght = string.length();
+        Character[] charArray = toCharacterArray(string);
+        Set<Character> set = new HashSet<Character>();
+        Collections.addAll(set, charArray);
+        return set.size() < stringLenght;
+    }
+
+    private static Character[] toCharacterArray(String string) {
+        char[] charArray = string.toCharArray();
+        Character[] characterArray = new Character[charArray.length];
+        for(int i = 0; i < characterArray.length; i++) {
+            characterArray[i] = charArray[i];
+        }
+        return characterArray;
+    }
+
 
     /**
      * Generates a pseudo-random number of a given length  with
