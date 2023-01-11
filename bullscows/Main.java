@@ -5,18 +5,45 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         //startGame();
-        generatePseudoRandomNumber_v2_test_02();
-        //startGame_V2();
+        startGame_V2();
     }
 
     private static void startGame_V2(){
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Input the length of the secret code:");
-        byte secretCodeLength = scanner.nextByte();
+        //byte secretCodeLength = scanner.nextByte();
+        byte secretCodeLength = 4;
 
         System.out.println("Input the number of possible symbols in the code:");
-        byte possibleSymbols = scanner.nextByte();
+        //byte possibleSymbols = scanner.nextByte();
+        byte possibleSymbols = 16;
+
+        String secret = generatePseudoRandomNumber_v2(secretCodeLength, possibleSymbols);
+        System.out.println("Secret: " + secret);
+        String maskedSecret = maskSecret(secret);
+        String initialChar = String.valueOf('a');
+        String finalChar = String.valueOf((char) ('a' + possibleSymbols - 11));
+        System.out.printf("The secret is prepared: %s (0-9, %s-%s)%n", maskedSecret, initialChar, finalChar);
+
+        System.out.println("Okay, let's start a game!");
+        String guess = "";
+        byte turnCount = 0;
+        do{
+            System.out.printf("Turn %d:%n", ++turnCount);
+            guess = scanner.next();
+            byte[] grade = calculateGrade(guess, secret);
+            System.out.println(buildGradeResponse(grade[0], grade[1], secret));
+        } while (!guess.equals(secret));
+        System.out.println("Congratulations! You guessed the secret code.");
+    }
+
+    private static String maskSecret(String secret) {
+        String maskedSecret = "";
+        for(int i = 0; i < secret.length(); i++){
+            maskedSecret += "*";
+        }
+        return maskedSecret;
     }
 
     private static void startGame() {
@@ -52,32 +79,44 @@ public class Main {
      * @return secretCode
      */
     private static String generatePseudoRandomNumber_v2(byte len, byte symbols) {
+        byte characters = (byte) (symbols - 11);
         // Validate length is in the range [0,36]
         if (!(len >= 0 && len <= 36)) {
              return "-1";
         } else {
-            // isNextCharOrDigit?
             StringBuilder sb = new StringBuilder();
             while (sb.length() < len) {
                 boolean addDigit =  isNextCharDigit();
-                addDigit = true;
                 if (addDigit) {
-                    System.out.println("Generate Random Digit");
                     sb.append(nextIntWithout(0,9,sb.toString()));
                 } else { // nextChar is Letter
-                    System.out.print("Generate Random letter");
-                    sb.append("V");
+                    char initialChar = 'a';
+                    sb.append(nextLetterInWithout(initialChar, (char) (initialChar + characters), sb.toString()));
                 }
             }
-
-            // if nextCharIsDigit?
-            //      generateRandomDigit in 0-9
-            // else nextCharIsLetter
-            //      generateRandomCharacter from available characters
-            // while length < requested length
-            //      appendCharacter.
             return sb.toString();
         }
+    }
+
+    private static int nextIntWithout(int a, int b, String exclusions) {
+        int candidate = nextInt(a, b);
+        while (exclusions.contains(String.valueOf(candidate))){
+            candidate = nextInt(a, b);
+        }
+        return candidate;
+    }
+
+    private static char nextLetterInWithout(char initialChar, char finalChar, String exclusions) {
+        char candidate = nextLetterIn(initialChar, finalChar);
+        while(exclusions.contains(String.valueOf(candidate))) {
+            candidate = nextLetterIn(initialChar, finalChar);
+        }
+        return candidate;
+    }
+
+    private static char nextLetterIn(char initialChar, char finalChar) {
+        char c = (char) nextInt(initialChar, finalChar);
+        return c;
     }
 
     private static boolean isNextCharDigit() {
@@ -95,6 +134,45 @@ public class Main {
                             expected == actual ? "success" : "FAIL",
                             expected, actual);
     }
+
+
+    private static void generatePseudoRandomNumber_v2_test_03() {
+        // 1. Given length > 0, symbols = 1
+        byte len = 2;
+        byte symbols = 1;
+
+        String actual = generatePseudoRandomNumber_v2(len, symbols);
+
+        boolean expectedResult =
+                Character.isDigit(actual.charAt(0))
+                        && isLatinLowercaseLetter(actual.charAt(1))
+                        && !hasRepeatedCharacters(actual);
+
+        System.out.printf("Result: %s, actual: %s:",
+                expectedResult ? "success" : "FAIL",
+                actual);
+    }
+
+    private static void generatePseudoRandomNumber_v2_test_04() {
+        // 1. Given length > 0, symbols = 1
+        byte len = 4;
+        byte symbols = 10;
+
+        String actual = generatePseudoRandomNumber_v2(len, symbols);
+
+        boolean expectedResult =
+                Character.isDigit(actual.charAt(0))
+                        && isLatinLowercaseLetter(actual.charAt(1))
+                        && !hasRepeatedCharacters(actual);
+
+        System.out.printf("Result: %s, actual: %s:%n",
+                expectedResult ? "success" : "FAIL",
+                actual);
+    }
+    private static boolean isLatinLowercaseLetter(char charAt) {
+        return Character.isLowerCase(charAt);
+    }
+
 
 
     private static void generatePseudoRandomNumber_v2_test_02() {
@@ -121,11 +199,11 @@ public class Main {
     }
 
     private static boolean hasRepeatedCharacters(String string){
-        int stringLenght = string.length();
+        int stringLength = string.length();
         Character[] charArray = toCharacterArray(string);
         Set<Character> set = new HashSet<Character>();
         Collections.addAll(set, charArray);
-        return set.size() < stringLenght;
+        return set.size() < stringLength;
     }
 
     private static Character[] toCharacterArray(String string) {
@@ -161,13 +239,7 @@ public class Main {
         return sb.toString();
     }
 
-    private static int nextIntWithout(int a, int b, String exclusions) {
-        int candidate = nextInt(a, b);
-        while (exclusions.contains(String.valueOf(candidate))){
-            candidate = nextInt(a, b);
-        }
-        return candidate;
-    }
+
 
     private static int nextInt(int a, int b) {
         return new Random().nextInt(b - a + 1) + a;
