@@ -4,23 +4,20 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        //startGame();
-        startGame_V2();
+        startGame();
     }
 
-    private static void startGame_V2(){
+    private static void startGame(){
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Input the length of the secret code:");
-        //byte secretCodeLength = scanner.nextByte();
-        byte secretCodeLength = 4;
+        byte secretCodeLength = scanner.nextByte();
 
         System.out.println("Input the number of possible symbols in the code:");
-        //byte possibleSymbols = scanner.nextByte();
-        byte possibleSymbols = 16;
+        byte possibleSymbols = scanner.nextByte();
 
         String secret = generatePseudoRandomNumber_v2(secretCodeLength, possibleSymbols);
-        System.out.println("Secret: " + secret);
+
         String maskedSecret = maskSecret(secret);
         String initialChar = String.valueOf('a');
         String finalChar = String.valueOf((char) ('a' + possibleSymbols - 11));
@@ -46,25 +43,6 @@ public class Main {
         return maskedSecret;
     }
 
-    private static void startGame() {
-        System.out.println("Please, enter the secret code's length:");
-        Scanner scanner = new Scanner(System.in);
-        byte secretCodeLength = scanner.nextByte();
-
-        String secret = generatePseudoRandomNumber(secretCodeLength);
-        System.out.println("Okay, let's start a game!");
-        String guess = "";
-        byte turnCount = 0;
-        do{
-            System.out.printf("Turn %d:%n", ++turnCount);
-            guess = scanner.next();
-            byte[] grade = calculateGrade(guess, secret);
-            System.out.println(buildGradeResponse(grade[0], grade[1], secret));
-        } while (!guess.equals(secret));
-        System.out.println("Congratulations! You guessed the secret code.");
-    }
-
-    
     /**
      * Generates a pseudo-random number of a given a secret code length
      * and a number of possible symbols. The secret code has the following
@@ -122,123 +100,6 @@ public class Main {
     private static boolean isNextCharDigit() {
         return new Random().nextBoolean();
     }
-
-    private static void generatePseudoRandomNumber_v2_test_01() {
-        // 1. Given lenght > 36 return "-1"
-        byte len = 37;
-        byte symbols = 1;
-        
-        String expected = "-1";
-        String actual = generatePseudoRandomNumber_v2(len, symbols);
-        System.out.printf("Result: %s, expected: %s, actual: %s:",
-                            expected == actual ? "success" : "FAIL",
-                            expected, actual);
-    }
-
-
-    private static void generatePseudoRandomNumber_v2_test_03() {
-        // 1. Given length > 0, symbols = 1
-        byte len = 2;
-        byte symbols = 1;
-
-        String actual = generatePseudoRandomNumber_v2(len, symbols);
-
-        boolean expectedResult =
-                Character.isDigit(actual.charAt(0))
-                        && isLatinLowercaseLetter(actual.charAt(1))
-                        && !hasRepeatedCharacters(actual);
-
-        System.out.printf("Result: %s, actual: %s:",
-                expectedResult ? "success" : "FAIL",
-                actual);
-    }
-
-    private static void generatePseudoRandomNumber_v2_test_04() {
-        // 1. Given length > 0, symbols = 1
-        byte len = 4;
-        byte symbols = 10;
-
-        String actual = generatePseudoRandomNumber_v2(len, symbols);
-
-        boolean expectedResult =
-                Character.isDigit(actual.charAt(0))
-                        && isLatinLowercaseLetter(actual.charAt(1))
-                        && !hasRepeatedCharacters(actual);
-
-        System.out.printf("Result: %s, actual: %s:%n",
-                expectedResult ? "success" : "FAIL",
-                actual);
-    }
-    private static boolean isLatinLowercaseLetter(char charAt) {
-        return Character.isLowerCase(charAt);
-    }
-
-
-
-    private static void generatePseudoRandomNumber_v2_test_02() {
-        // 1. Given length > 0 return != "-1"
-        byte len = 2;
-        byte symbols = 0;
-        
-        String expected = "";
-        String actual = generatePseudoRandomNumber_v2(len, symbols);
-
-        boolean first_character_is_a_digit = Character.isDigit(actual.charAt(0));
-        boolean second_character_is_a_digit = Character.isDigit(actual.charAt(1));
-
-        boolean there_are_repeated_characters = hasRepeatedCharacters(actual);
-
-        boolean expectedResult = first_character_is_a_digit
-                && second_character_is_a_digit && !there_are_repeated_characters;
-
-        // unique characters
-
-        System.out.printf("Result: %s, actual: %s:",
-                            expectedResult ? "success" : "FAIL",
-                            actual);
-    }
-
-    private static boolean hasRepeatedCharacters(String string){
-        int stringLength = string.length();
-        Character[] charArray = toCharacterArray(string);
-        Set<Character> set = new HashSet<Character>();
-        Collections.addAll(set, charArray);
-        return set.size() < stringLength;
-    }
-
-    private static Character[] toCharacterArray(String string) {
-        char[] charArray = string.toCharArray();
-        Character[] characterArray = new Character[charArray.length];
-        for(int i = 0; i < characterArray.length; i++) {
-            characterArray[i] = charArray[i];
-        }
-        return characterArray;
-    }
-
-
-    /**
-     * Generates a pseudo-random number of a given length  with
-     * the following characteristics:
-     *
-     * - Contains unique digits from 0 to 9.
-     * - It can not start with the 0 digit
-     *
-     * @param len integer number between 0 and 9. If
-     *            numberLength > 10 it returns -1.
-     * @return secretCode
-     */
-    private static String generatePseudoRandomNumber(byte len) {
-        // Validate length is in the range [0,9]
-        if (!(len >= 0 && len <= 9)) return "-1";
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(nextInt(1,10));
-        while ( sb.length() < len ) {
-            sb.append(nextIntWithout(0,10,sb.toString()));
-        }
-        return sb.toString();
-    }
-
 
 
     private static int nextInt(int a, int b) {
@@ -314,79 +175,4 @@ public class Main {
         }
         return gradeResponse;
     }
-
-    private static void testSuiteGeneratePseudoRandomNumber() {
-        Scanner scanner = new Scanner(System.in);
-        while(scanner.hasNextLine()){
-            String[] columns = (scanner.nextLine()).split(","); 
-            byte length = Byte.parseByte(columns[0]);
-            String expectedMessage = columns[1];
-            //long actualValue = generatePseudoRandomNumber(length);
-            showPseudoRandomNumber(length);
-            //System.out.printf("Length: %d, expected: %s , actual: %d %n", length, expectedMessage, actualValue);
-        }
-    }
-
-    private static void showPseudoRandomNumber(byte digits) {
-        String template = "";
-        String randomNumber = generatePseudoRandomNumber(digits);
-        if (randomNumber.equals("-1")) {
-            template = "Error: can't generate a secret number with a length of %d because there aren't enough unique digits.%n";
-            System.out.printf(template, digits);
-        } else {
-            template = "The random secret number is %s.%n";
-            System.out.printf(template, randomNumber);
-        }
-    }
-
-    private static void testSuiteCalculateGrade() {
-        String s = "9305"; // secret
-
-        // Guesses for 4 bulls, 0 cows
-        System.out.println("4 bulls, 0 cows:");
-        testCalculateGrade(new String[]{"9305"}, s);
-
-        // Guesses for 0 bulls, 4 cows
-        System.out.println("0 bulls, 4 cows:");
-        testCalculateGrade(new String[]{"3059", "3590", "5930", "5039"}, s);
-
-        // Guesses for 3 bulls
-        System.out.println("3 bulls:");
-        testCalculateGrade(new String[]{"9306", "9385", "9505", "1305"}, s);
-
-        // Guesses for 2 bulls, 2 cows
-        System.out.println("2 bulls, 2 cows");
-        testCalculateGrade(new String[]{"9350", "9035", "5309", "3905"}, s);
-
-        // Guesses for 0 bulls, 2 cows
-        System.out.println("0 bulls, 2 cows ");
-        testCalculateGrade(new String[]{"1293", "5012", "3512", "5129"}, s);
-
-        // Guesses for 0 bulls, 0 cows
-        System.out.println("0 bulls, 0 cows ");
-        testCalculateGrade(new String[]{"1246", "7184", "4862", "2718"}, s);
-
-        // Repetitive digits
-        System.out.println("Repetitive 0 bulls, 0 cows");
-        testCalculateGrade(new String[]{"1111"}, s);
-
-        System.out.println("Repetitive 1 bulls, 3 cows");
-        testCalculateGrade(new String[]{"9999"}, s);
-
-        System.out.println("Repetitive 2 bulls, 2 cows");
-        testCalculateGrade(new String[]{"9955"}, s);
-
-        System.out.println("Repetitive ");
-    }
-
-    private static void testCalculateGrade(String[] guesses, String s) {
-        for (int i = 0; i < guesses.length; i++) {
-            byte[] grade = calculateGrade(s,guesses[i]);
-            System.out.printf("secret: %s   guess: %s   bulls: %d   cows: %d%n", s, guesses[i], grade[0], grade[1]);
-        }
-    }
-
-
-
-
 }
