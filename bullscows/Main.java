@@ -18,10 +18,16 @@ public class Main {
 
         String secret = generatePseudoRandomNumber_v2(secretCodeLength, possibleSymbols);
 
+        System.out.printf("Secret: %s", secret);
+
         String maskedSecret = maskSecret(secret);
         String initialChar = String.valueOf('a');
         String finalChar = String.valueOf((char) ('a' + possibleSymbols - 11));
-        System.out.printf("The secret is prepared: %s (0-9, %s-%s)%n", maskedSecret, initialChar, finalChar);
+        if(possibleSymbols > 10) {
+            System.out.printf("The secret is prepared: %s (0-9, %s-%s)%n", maskedSecret, initialChar, finalChar);
+        } else {
+            System.out.printf("The secret is prepared: %s (0-9)%n", maskedSecret);
+        }
 
         System.out.println("Okay, let's start a game!");
         String guess = "";
@@ -57,19 +63,26 @@ public class Main {
      * @return secretCode
      */
     private static String generatePseudoRandomNumber_v2(byte len, byte symbols) {
-        byte characters = (byte) (symbols - 11);
+
+        byte characters = (byte) (symbols > 10 ? symbols - 10 : 0);  ;
         // Validate length is in the range [0,36]
         if (!(len >= 0 && len <= 36)) {
              return "-1";
         } else {
             StringBuilder sb = new StringBuilder();
             while (sb.length() < len) {
-                boolean addDigit =  isNextCharDigit();
+                boolean addDigit =  true;
+                if(characters > 0){
+                    addDigit = isNextCharDigit();
+                }
+
                 if (addDigit) {
                     sb.append(nextIntWithout(0,9,sb.toString()));
                 } else { // nextChar is Letter
                     char initialChar = 'a';
-                    sb.append(nextLetterInWithout(initialChar, (char) (initialChar + characters), sb.toString()));
+                    char finalChar = (char) (initialChar + characters - 1);
+                    char c = nextLetterInWithout(initialChar, finalChar, sb.toString());
+                    sb.append(c);
                 }
             }
             return sb.toString();
@@ -155,23 +168,23 @@ public class Main {
 
         // There are both bulls and cows
         if (bulls >= 1 && cows >= 1) {
-            template = "Grade: %d bull(s) and %d cow(s). The secret code is %s.%n";
-            gradeResponse = String.format(template, bulls, cows, secret);
+            template = "Grade: %d bull(s) and %d cow(s).%n";
+            gradeResponse = String.format(template, bulls, cows);
         }
         // There are only bulls
         else if (bulls >= 1) {
-            template = "Grade: %d bull(s). The secret code is %s.%n";
-            gradeResponse = String.format(template, bulls, secret);
+            template = "Grade: %d bull(s).%n";
+            gradeResponse = String.format(template, bulls);
         }
         // There are only cows
         else if (cows >= 1) {
-            template = "Grade: %d cow(s). The secret code is %s.%n";
-            gradeResponse = String.format(template, cows, secret);
+            template = "Grade: %d cow(s).%n";
+            gradeResponse = String.format(template, cows);
         }
         // There are neither bulls nor cows
         else {
-            template = "Grade: None. The secret code is %s.%n";
-            gradeResponse = String.format(template, secret);
+            template = "Grade: None.%n";
+            gradeResponse = String.format(template);
         }
         return gradeResponse;
     }
