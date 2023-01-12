@@ -16,7 +16,7 @@ public class Main {
         System.out.println("Input the number of possible symbols in the code:");
         byte possibleSymbols = scanner.nextByte();
 
-        String secret = generatePseudoRandomNumber_v2(secretCodeLength, possibleSymbols);
+        String secret = generatePseudoRandomNumber(secretCodeLength, possibleSymbols);
 
         System.out.printf("Secret: %s", secret);
 
@@ -62,7 +62,7 @@ public class Main {
      * @param symbols number of possible characters 
      * @return secretCode
      */
-    private static String generatePseudoRandomNumber_v2(byte len, byte symbols) {
+    private static String generatePseudoRandomNumber(byte len, byte symbols) {
 
         byte characters = (byte) (symbols > 10 ? symbols - 10 : 0);  ;
         // Validate length is in the range [0,36]
