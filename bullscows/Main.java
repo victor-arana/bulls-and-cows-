@@ -21,6 +21,9 @@ public class Main {
         System.out.printf("Secret: %s", secret);
 
         String maskedSecret = maskSecret(secret);
+
+        System.out.printf("The secret is prepared: %s %s.%n", maskSecret(secret), formatRange(possibleSymbols));
+
         String initialChar = String.valueOf('a');
         String finalChar = String.valueOf((char) ('a' + possibleSymbols - 11));
         if(possibleSymbols > 10) {
@@ -39,6 +42,27 @@ public class Main {
             System.out.println(buildGradeResponse(grade[0], grade[1], secret));
         } while (!guess.equals(secret));
         System.out.println("Congratulations! You guessed the secret code.");
+    }
+
+    private static String formatRange(byte symbols) {
+        if (symbols == 0) {
+            return "";
+        }
+
+        String formattedRange = "";
+
+        int digits = symbols <= 10 ? symbols : 10; // from 0 to 9
+        int letters = symbols - digits;
+        if (letters > 0) {
+            char finalLetter = (char) ('a' - 1 + letters);
+            formattedRange = String.format("0-9, a-%s", finalLetter);
+        } else if (letters == 0){
+            formattedRange = String.format("0-9");
+        } else {
+            formattedRange = String.format("0-%d", digits + letters);
+        }
+
+        return formattedRange;
     }
 
     private static String maskSecret(String secret) {
