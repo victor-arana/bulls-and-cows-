@@ -20,14 +20,6 @@ public class Main {
         String maskedSecret = maskSecret(secret);
         System.out.printf("The secret is prepared: %s %s.%n", maskedSecret, formatRange(possibleSymbols));
 
-        String initialChar = String.valueOf('a');
-        String finalChar = String.valueOf((char) ('a' + possibleSymbols - 11));
-        if(possibleSymbols > 10) {
-            System.out.printf("The secret is prepared: %s (0-9, %s-%s)%n", maskedSecret, initialChar, finalChar);
-        } else {
-            System.out.printf("The secret is prepared: %s (0-9)%n", maskedSecret);
-        }
-
         System.out.println("Okay, let's start a game!");
         String guess = "";
         byte turnCount = 0;
@@ -51,11 +43,11 @@ public class Main {
         int letters = symbols - digits;
         if (letters > 0) {
             char finalLetter = (char) ('a' - 1 + letters);
-            formattedRange = String.format("0-9, a-%s", finalLetter);
+            formattedRange = String.format("(0-9), a-%s", finalLetter);
         } else if (letters == 0){
-            formattedRange = String.format("0-9");
+            formattedRange = String.format("(0-9)");
         } else {
-            formattedRange = String.format("0-%d", digits + letters);
+            formattedRange = String.format("(0-%d)", digits + letters);
         }
 
         return formattedRange;
