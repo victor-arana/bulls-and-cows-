@@ -17,12 +17,8 @@ public class Main {
         byte possibleSymbols = scanner.nextByte();
 
         String secret = generatePseudoRandomNumber(secretCodeLength, possibleSymbols);
-
-        System.out.printf("Secret: %s", secret);
-
         String maskedSecret = maskSecret(secret);
-
-        System.out.printf("The secret is prepared: %s %s.%n", maskSecret(secret), formatRange(possibleSymbols));
+        System.out.printf("The secret is prepared: %s %s.%n", maskedSecret, formatRange(possibleSymbols));
 
         String initialChar = String.valueOf('a');
         String finalChar = String.valueOf((char) ('a' + possibleSymbols - 11));
