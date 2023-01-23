@@ -96,7 +96,8 @@ public class Main {
 
         byte characters = (byte) (symbols > 10 ? symbols - 10 : 0);  ;
         // Validate length is in the range [0,36]
-        if (!(len >= 0 && len <= 36)) {
+        if (!(symbols >= 0 && symbols <= 36)) {
+             System.out.printf("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
              return "-1";
         } else if(len > symbols){
              System.out.printf("Error: it's not possible to generate a code with a length of %d with %d unique symbols.", len, symbols);
