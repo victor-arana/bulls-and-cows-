@@ -10,11 +10,27 @@ public class Main {
     private static void startGame(){
         Scanner scanner = new Scanner(System.in);
 
+        // Read secret code length
         System.out.println("Input the length of the secret code:");
-        byte secretCodeLength = scanner.nextByte();
+        byte secretCodeLength = 0;
+        String readSecretCode = scanner.next();
+        try {
+            secretCodeLength = Byte.parseByte(readSecretCode);
+        } catch (NumberFormatException e){
+            System.out.printf("Error: %s isn't a valid number.", readSecretCode);
+            return;
+        }
 
+        // Read possible symbols
         System.out.println("Input the number of possible symbols in the code:");
-        byte possibleSymbols = scanner.nextByte();
+        byte possibleSymbols = 0;
+        String readPossibleSymbols = scanner.next();
+        try {
+             possibleSymbols = Byte.parseByte(readPossibleSymbols);
+        } catch (NumberFormatException e) {
+            System.out.printf("Error: %s isn't a valid number.", readPossibleSymbols);
+            return;
+        }
 
         String secret = generatePseudoRandomNumber(secretCodeLength, possibleSymbols);
         if(secret.equals("-1")) return;
