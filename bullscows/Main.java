@@ -17,6 +17,8 @@ public class Main {
         byte possibleSymbols = scanner.nextByte();
 
         String secret = generatePseudoRandomNumber(secretCodeLength, possibleSymbols);
+        if(secret.equals("-1")) return;
+
         String maskedSecret = maskSecret(secret);
         System.out.printf("The secret is prepared: %s %s.%n", maskedSecret, formatRange(possibleSymbols));
 
@@ -79,6 +81,9 @@ public class Main {
         byte characters = (byte) (symbols > 10 ? symbols - 10 : 0);  ;
         // Validate length is in the range [0,36]
         if (!(len >= 0 && len <= 36)) {
+             return "-1";
+        } else if(len > symbols){
+             System.out.printf("Error: it's not possible to generate a code with a length of %d with %d unique symbols.", len, symbols);
              return "-1";
         } else {
             StringBuilder sb = new StringBuilder();
